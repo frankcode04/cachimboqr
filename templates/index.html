@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de QR</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 50px;
+        }
+        input {
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 15px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        img {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Generador de Códigos QR</h2>
+    <form id="qr-form">
+        <input type="text" id="student_code" name="student_code" placeholder="Ingrese código de alumno" required>
+        <button type="submit">Generar QR</button>
+    </form>
+    <br>
+    <img id="qr-image" style="display:none;">
+
+    <script>
+        document.getElementById("qr-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            let studentCode = document.getElementById("student_code").value;
+            if (studentCode.trim() === "") return;
+
+            fetch("/generate_qr", {
+                method: "POST",
+                body: new URLSearchParams({ "student_code": studentCode }),
+                headers: { "Content-Type": "application/x-www-form-urlencoded" }
+            })
+            .then(response => response.blob())
+            .then(blob => {
+                let img = document.getElementById("qr-image");
+                img.src = URL.createObjectURL(blob);
+                img.style.display = "block";
+            });
+        });
+    </script>
+</body>
+</html>
