@@ -8,6 +8,10 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
+@app.route('/instructions')
+def instructions():
+    return render_template('instructions.html')
+
 @app.route('/generate_qr', methods=['POST'])
 def generate_qr():
     data = request.form['student_code']
